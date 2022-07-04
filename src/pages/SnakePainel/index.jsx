@@ -1,11 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Container } from './styles';
+import { 
+  Container,
+  Squad
+} from './styles';
 
 function SnakePainel() {
+
+  const [quantitySquad, setQuantitySquad] = useState(40);
+
+  const buildSquads = () => {
+
+    let count = 0;
+
+    if(count < quantitySquad){
+      count++;
+      return (
+        <>
+          <Squad />
+        </>
+      )
+    }
+  }
+
   return (
     <Container>
-        OIEE
+      {buildSquads()}
     </Container>
   );
 }
