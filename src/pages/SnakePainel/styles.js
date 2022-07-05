@@ -25,3 +25,11 @@ export const Circle = styled.div`
   background: red;
   border-radius: 50px;
 `;
+
+export const Snake = styled.div`
+  width: 1.5vw;
+  height: 2.5vh;
+  background: blue;
+  border-radius: 5px;
+  transition: right 0.5s;
+`;
