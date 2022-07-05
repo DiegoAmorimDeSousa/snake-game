@@ -1,31 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { 
   Container,
-  Squad
+  Squad,
+  Circle
 } from './styles';
 
 function SnakePainel() {
 
-  const [quantitySquad, setQuantitySquad] = useState(40);
+  const [quantitySquad, setQuantitySquad] = useState(240);
+  const [squadArray, setSquadArray] = useState(['']);
+  const [positionCircle, setPositionCircle] = useState(100);
+  const [callFunction, setCallFunction] = useState(true);
 
-  const buildSquads = () => {
+  let newSquadArray = [];
 
-    let count = 0;
-
-    if(count < quantitySquad){
-      count++;
-      return (
-        <>
-          <Squad />
-        </>
-      )
+  useEffect(() => {
+    while (newSquadArray.length < quantitySquad) {
+      newSquadArray.push(1);
     }
-  }
+    setSquadArray(newSquadArray);
+  }, []);
+
+  useEffect(() => {
+    if(callFunction){
+      setCallFunction(false);
+      setTimeout(() => {
+        setPositionCircle(Math.floor(Math.random() * quantitySquad));
+        setCallFunction(true);
+      }, 3000);
+    }
+  }, [positionCircle, callFunction]);
 
   return (
     <Container>
-      {buildSquads()}
+      {squadArray.map((element, index) => {
+        return (
+          <Squad 
+            key={index}
+            backgroundColor={
+              index % 2 == 0 ? 'var(--squad-1)' : 'var(--squad-2)'
+            }
+          >
+            {
+              positionCircle === index ? <Circle /> : ''
+            }
+          </Squad>
+        )
+      })}
     </Container>
   );
 }
