@@ -16,6 +16,7 @@ function SnakePainel() {
   const [callFunction, setCallFunction] = useState(true);
   const [callEvent, setCallEvent] = useState(false);
   const [lastKey, setLastKey] = useState('');
+  const [count, setCount] = useState(0);
 
   let newSquadArray = [];
 
@@ -29,43 +30,55 @@ function SnakePainel() {
   useEffect(() => {
     if(callFunction){
       setCallFunction(false);
-      setTimeout(() => {
-        setPositionCircle(Math.floor(Math.random() * quantitySquad));
-        setCallFunction(true);
-      }, 3000);
+      const newPosition = Math.floor(Math.random() * quantitySquad);
+      if(newPosition !== positionSnake){
+        setPositionCircle(newPosition);
+      }
     }
   }, [callFunction]);
 
   document.addEventListener('keydown', event => {
     setCallEvent(true);
-    console.log(lastKey, event.key, lastKey === 'ArrowRight' && event.key !== 'ArrowLeft');
     if(lastKey === ''){
       setLastKey(event.key);
+    } else if(lastKey === 'ArrowRight' && event.key === 'ArrowLeft'){
+      setLastKey(lastKey);
     } else if(lastKey === 'ArrowRight' && event.key !== 'ArrowLeft'){
-      setLastKey(lastKey);
-    } else {
-      setLastKey(lastKey);
+      setLastKey(event.key);
+    } else if(lastKey !== 'ArrowRight' && event.key === 'ArrowLeft'){
+      setLastKey(event.key);
     }
   });
 
   useEffect(() => {
     setTimeout(() => {
       if(callEvent){
+        console.log(positionSnake);
         if(lastKey === 'ArrowRight' && positionSnake < (quantitySquad - 1)){
           setPositionSnake(positionSnake + 1);
-        }
-        if(lastKey === 'ArrowLeft' && positionSnake > 0){
+          if(positionSnake === positionCircle){
+            setCount(count + 1);
+            setCallFunction(true);
+          }
+        } else if(lastKey === 'ArrowUp' && positionSnake > 20) {
+          setPositionSnake(positionSnake - 20);
+          if(positionSnake === positionCircle){
+            setCount(count + 1);
+            setCallFunction(true);
+          }
+        } else if(lastKey === 'ArrowDown' && positionSnake < 219){
+          setPositionSnake(positionSnake + 20);
+          if(positionSnake === positionCircle){
+            setCount(count + 1);
+            setCallFunction(true);
+          }
+        } else if(lastKey === 'ArrowLeft' && positionSnake > 0){
           setPositionSnake(positionSnake - 1);
+          if(positionSnake === positionCircle){
+            setCount(count + 1);
+            setCallFunction(true);
+          }
         }
-        if(lastKey === 'ArrowLeft' && positionSnake === 0){
-          setPositionSnake(239);
-        }
-        // if(lastKey === 'ArrowUp'){
-        //   setPositionSnake(positionSnake - 20);
-        // }
-        // if(lastKey === 'ArrowDown'){
-        //   setPositionSnake(positionSnake + 20);
-        // }
       }
     }, 200);
   }, [positionSnake, callEvent, lastKey]);
@@ -84,7 +97,7 @@ function SnakePainel() {
               positionCircle === index ? <Circle /> : ''
             }
             {
-              positionSnake === index ? <Snake id="snake"/> : ''
+              positionSnake === index ? <Snake id="snake">{count}</Snake> : ''
             }
           </Squad>
         )
